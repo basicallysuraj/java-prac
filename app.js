@@ -158,6 +158,8 @@ function buildCards() {
     card.dataset.desc = exp.desc.toLowerCase();
     card.dataset.tags = exp.tags.map(t => t.label.toLowerCase()).join(' ');
     card.dataset.files = exp.files.map(f => f.name.toLowerCase()).join(' ');
+    // Destination paths for search
+    card.dataset.paths = exp.files.map(f => (f.path || '').toLowerCase()).join(' ');
     // Full code corpus for deep search
     card.dataset.code = exp.files.map(f => f.code.toLowerCase()).join(' ');
 
@@ -414,6 +416,7 @@ function setupSearch() {
       const desc  = card.dataset.desc || '';
       const tags  = card.dataset.tags || '';
       const files = card.dataset.files || '';
+      const paths = card.dataset.paths || '';
       const code  = card.dataset.code || '';
 
       const matches = !q ||
@@ -422,6 +425,7 @@ function setupSearch() {
         desc.includes(q) ||
         tags.includes(q) ||
         files.includes(q) ||
+        paths.includes(q) ||
         code.includes(q);
 
       card.style.display = matches ? 'block' : 'none';
