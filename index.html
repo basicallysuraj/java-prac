@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Java Lab Experiments | Exact Code Repository</title>
+  <meta name="description" content="Copy-ready repository of Java lab experiments with exact codes and individual file copy buttons." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">☕</span>
+        <div>
+          <h1>Java Lab</h1>
+          <p>Created By GOD!</p>
+        </div>
+      </div>
+      <nav class="nav-pills" id="navPills">
+        <!-- Rendered by JS -->
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">📚 10 Experiments &bull; 100% Exact Code</div>
+      <h2 class="hero-title">Java Lab Experiments,<br /><span class="gradient-text">Created By GOD!</span></h2>
+      <p class="hero-sub">Select any experiment to expand its code. Switch between files using the dropdown menu or tabs, and copy each file separately with a single click.</p>
+
+      <!-- Search & Quick Controls -->
+      <div class="hero-controls">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search experiments by name, topic, or file..." autocomplete="off" />
+          <button id="searchClear" class="search-clear" style="display:none;" title="Clear search">&times;</button>
+        </div>
+        <div class="action-buttons">
+          <button id="btnExpandAll" class="btn-action" type="button">Expand All</button>
+          <button id="btnCollapseAll" class="btn-action" type="button">Collapse All</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experiments Container -->
+  <main class="container" id="experimentsContainer">
+    <!-- Experiment cards dynamically rendered by app.js -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>☕ Java Lab Experiments Repository &bull; Exact, verified codes for students</p>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span class="toast-icon">✅</span>
+    <span id="toastMsg">Code copied!</span>
+  </div>
+
+  <script src="experiments.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
