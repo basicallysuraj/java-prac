@@ -1,6 +1,7 @@
 /**
  * experiments.js — Complete, exact code and setup guides for all 10 Java lab experiments
  * Exactly 10 experiments numbered 01 to 10.
+ * EXP 4, EXP 5, and EXP 9 have been updated and verified against master-prompt-improve-exp-4-5-9.md.
  */
 
 const experiments = [
@@ -211,8 +212,8 @@ public class Hierarchical {
   },
   {
     num: "04",
-    title: "Apache Tomcat & First Servlet",
-    desc: "Experiment No. 04 — Installing Tomcat 9, configuring environment variables, deploying GenericServlet with web.xml",
+    title: "Apache Tomcat 9 and First Servlet",
+    desc: "Experiment No. 04 — Installing Tomcat 9, configuring environment variables, deploying GenericServlet with Servlet 4.0 web.xml",
     tags: [
       { label: "Java", cls: "tag-java" },
       { label: "Servlet", cls: "tag-adv" },
@@ -220,7 +221,37 @@ public class Hierarchical {
     ],
     files: [
       {
+        name: "1. Setup & Environment (CMD)",
+        path: "CMD Terminal (Environment Variables & Directory Creation)",
+        lang: "TEXT",
+        code: `:: ========================================================
+:: EXPERIMENT 4: TOMCAT 9 & FIRST SERVLET SETUP GUIDE
+:: ========================================================
+
+:: 1. Download Apache Tomcat 9:
+:: Official URL: https://tomcat.apache.org/download-90.cgi
+:: Target Archive: apache-tomcat-9.0.106-windows-x64.zip
+:: Extraction Root: C:\\apache-tomcat-9.0.106-windows-x64\\apache-tomcat-9.0.106
+
+:: Note: If 9.0.106 is archived by Apache, download the current official Tomcat 9.0.x zip release.
+
+:: 2. Set Environment Variables (Current CMD Session):
+:: Note: 'set' applies to the active CMD window. For persistent configuration, configure Windows System Environment Variables.
+set "JAVA_HOME=C:\\Program Files\\Java\\jdk-22"
+set "CATALINA_HOME=C:\\apache-tomcat-9.0.106-windows-x64\\apache-tomcat-9.0.106"
+set "PATH=%JAVA_HOME%\\bin;%PATH%"
+
+:: Verify Java & Javac exist and run properly:
+java -version
+javac -version
+
+:: 3. Create Required Web Application Directory Layout:
+mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example"
+mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes\\com\\example"`
+      },
+      {
         name: "FirstServlet.java",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\FirstServlet.java",
         lang: "JAVA",
         code: `package com.example;
 
@@ -231,15 +262,19 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+/**
+ * FirstServlet extends GenericServlet and returns HTML with UTF-8 encoding.
+ * Uses javax.servlet.* APIs compatible with Apache Tomcat 9.
+ */
 public class FirstServlet extends GenericServlet {
 
     @Override
     public void service(ServletRequest req, ServletResponse resp)
             throws ServletException, IOException {
-        resp.setContentType("text/html;charset=UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
         PrintWriter pw = resp.getWriter();
         pw.println("<!DOCTYPE html>");
-        pw.println("<html>");
+        pw.println("<html lang=\"en\">");
         pw.println("<head><title>My First Servlet</title></head>");
         pw.println("<body>");
         pw.println("<h2>Welcome To Servlet World!</h2>");
@@ -251,6 +286,7 @@ public class FirstServlet extends GenericServlet {
       },
       {
         name: "web.xml",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\web.xml",
         lang: "XML",
         code: `<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
@@ -273,50 +309,40 @@ public class FirstServlet extends GenericServlet {
 </web-app>`
       },
       {
-        name: "Setup & Execution Guide (CMD)",
+        name: "2. Compile, Launch & Test (CMD)",
+        path: "CMD Terminal (Compile & Launch)",
         lang: "TEXT",
         code: `:: ========================================================
-:: EXPERIMENT 4: TOMCAT 9 & FIRST SERVLET SETUP GUIDE
+:: EXPERIMENT 4: COMPILE, STARTUP & VERIFICATION
 :: ========================================================
 
-:: 1. Download Apache Tomcat 9:
-:: URL: https://tomcat.apache.org/download-90.cgi
-:: File: apache-tomcat-9.0.106-windows-x64.zip
+:: 1. Compile FirstServlet using Tomcat's built-in servlet-api.jar:
+javac -encoding UTF-8 -cp "%CATALINA_HOME%\\lib\\servlet-api.jar" -d "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes" "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\FirstServlet.java"
 
-:: 2. Extract to root folder:
-:: C:\\apache-tomcat-9.0.106-windows-x64\\apache-tomcat-9.0.106
+:: Output class file is created at:
+:: %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes\\com\\example\\FirstServlet.class
 
-:: 3. Set Environment Variables (Run in CMD or set via System Properties):
-set JAVA_HOME=C:\\Program Files\\Java\\jdk-22
-set CATALINA_HOME=C:\\apache-tomcat-9.0.106-windows-x64\\apache-tomcat-9.0.106
-set PATH=%JAVA_HOME%\\bin;%PATH%
-
-:: 4. Create Web Application Folder Layout:
-mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example"
-mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes\\com\\example"
-
-:: 5. Place FirstServlet.java at:
-:: %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\FirstServlet.java
-
-:: 6. Place web.xml at:
-:: %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\web.xml
-
-:: 7. Compile FirstServlet using Tomcat's servlet-api.jar:
-javac -cp "%CATALINA_HOME%\\lib\\servlet-api.jar" -d "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes" "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\FirstServlet.java"
-
-:: 8. Start Apache Tomcat:
+:: 2. Start Apache Tomcat 9:
 "%CATALINA_HOME%\\bin\\startup.bat"
 
-:: 9. Test in Browser:
-:: Tomcat Welcome: http://127.0.0.1:8080/
-:: Servlet Endpoint: http://127.0.0.1:8080/Sample/FirstServlet
-:: Expected Heading: "Welcome To Servlet World!"`
+:: Look for the console output: "Server startup in [x] milliseconds"
+
+:: 3. Test Endpoints in Browser:
+:: Tomcat Default Root: http://127.0.0.1:8080/
+:: Servlet Endpoint:    http://127.0.0.1:8080/Sample/FirstServlet
+:: Expected Result:     Displays heading "Welcome To Servlet World!"
+
+:: ── Troubleshooting ──
+:: • Missing JAVA_HOME: Run 'echo %JAVA_HOME%' to ensure it points to JDK root, not JDK bin.
+:: • Port 8080 In Use: Run 'netstat -ano | findstr 8080' or change port in %CATALINA_HOME%\\conf\\server.xml.
+:: • HTTP 404: Confirm web.xml has exact mapping <url-pattern>/FirstServlet</url-pattern>.
+:: • ClassNotFoundException: Verify FirstServlet.class is inside WEB-INF\\classes\\com\\example\\.`
       }
     ]
   },
   {
     num: "05",
-    title: "JSP Login System with MySQL & Servlet",
+    title: "JSP, Servlet, and MySQL Login",
     desc: "Experiment No. 05 — Full JDBC authentication flow: MySQL database, Login.jsp form, LoginServlet controller, and JSP views",
     tags: [
       { label: "JSP", cls: "tag-adv" },
@@ -325,38 +351,78 @@ javac -cp "%CATALINA_HOME%\\lib\\servlet-api.jar" -d "%CATALINA_HOME%\\webapps\\
     ],
     files: [
       {
-        name: "Create MySQL Database Table",
+        name: "1. Setup & Directory (CMD)",
+        path: "CMD Terminal (MySQL & Directory Setup)",
+        lang: "TEXT",
+        code: `:: ========================================================
+:: EXPERIMENT 5: MYSQL & DIRECTORY SETUP GUIDE
+:: ========================================================
+
+:: 1. MySQL Installer & Launch:
+:: Official URL: https://dev.mysql.com/downloads/installer/
+:: Supplied Package: mysql-installer-web-community-8.0.42 (or latest 8.0.x community installer)
+
+:: Open Command Prompt as Administrator and log into MySQL CLI:
+cd /d "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin"
+mysql -u root -p
+:: Enter the root password configured during your local MySQL installation.
+:: Then paste and run the SQL script in "Database Setup (SQL)".
+
+:: 2. Create Application Directory Structure:
+if not exist "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes\\com\\example" mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes\\com\\example"
+if not exist "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\lib" mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\lib"
+if not exist "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example" mkdir "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example"
+
+:: 3. MySQL Connector/J Runtime Dependency:
+:: Download official Connector/J from: https://dev.mysql.com/downloads/connector/j/
+:: Place mysql-connector-j-8.0.33.jar (or your installed Connector/J JAR) into:
+:: %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\lib\\mysql-connector-j-8.0.33.jar`
+      },
+      {
+        name: "Database Setup (SQL)",
+        path: "login_db (MySQL Script)",
         lang: "SQL",
-        code: `CREATE DATABASE login_db;
+        code: `-- ========================================================
+-- EXPERIMENT 5: DATABASE INITIALIZATION SCRIPT
+-- Safe to rerun without generating duplicate administrator accounts
+-- ========================================================
+
+CREATE DATABASE IF NOT EXISTS login_db;
 USE login_db;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(50) NOT NULL
 );
 
--- Insert sample administrator user
-INSERT INTO users (username, password) VALUES ('admin', 'admin123');
+-- Seed sample administrator account (Demonstration authentication credentials only)
+INSERT INTO users (username, password)
+VALUES ('admin', 'admin123')
+ON DUPLICATE KEY UPDATE password = VALUES(password);
 
--- Verify inserted record
-SELECT * FROM users;`
+-- Verify table schema and sample data:
+SELECT id, username, password FROM users;`
       },
       {
         name: "Login.jsp",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\Login.jsp",
         lang: "JSP",
         code: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
 </head>
 <body>
     <h2>Login Form</h2>
+    <!-- Context-relative form action works reliably under /Sample without hardcoding host or port -->
     <form action="LoginServlet" method="post">
-        Username: <input type="text" name="username" required /><br><br>
-        Password: <input type="password" name="password" required /><br><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required /><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required /><br><br>
         <input type="submit" value="Login" />
     </form>
 </body>
@@ -364,6 +430,7 @@ SELECT * FROM users;`
       },
       {
         name: "LoginServlet.java",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\LoginServlet.java",
         lang: "JAVA",
         code: `package com.example;
 
@@ -379,11 +446,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Controller servlet for database-driven authentication.
+ * Uses javax.servlet APIs for Tomcat 9 and closes JDBC resources with try-with-resources.
+ */
 public class LoginServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/login_db";
     private static final String DB_USER = "root";
-    // Change this placeholder to your actual local MySQL root password
-    private static final String DB_PASSWORD = "your_mysql_password";
+    // ATTENTION: Replace placeholder below with your actual local MySQL root password
+    private static final String DB_PASSWORD = "your_actual_mysql_password";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -394,10 +465,11 @@ public class LoginServlet extends HttpServlet {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            throw new ServletException("MySQL Connector/J Driver not found in WEB-INF/lib", e);
+            log("MySQL Connector/J Driver not found in WEB-INF/lib", e);
+            throw new ServletException("MySQL Connector/J Driver missing. Place mysql-connector-j JAR into WEB-INF/lib.", e);
         }
 
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String sql = "SELECT id, username FROM users WHERE username = ? AND password = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -406,7 +478,8 @@ public class LoginServlet extends HttpServlet {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    request.setAttribute("username", user);
+                    String authenticatedUser = rs.getString("username");
+                    request.setAttribute("username", authenticatedUser);
                     RequestDispatcher rd = request.getRequestDispatcher("/welcome.jsp");
                     rd.forward(request, response);
                 } else {
@@ -415,6 +488,7 @@ public class LoginServlet extends HttpServlet {
                 }
             }
         } catch (SQLException e) {
+            log("Database access exception during login: " + e.getMessage(), e);
             throw new ServletException("Database access error: " + e.getMessage(), e);
         }
     }
@@ -422,10 +496,11 @@ public class LoginServlet extends HttpServlet {
       },
       {
         name: "welcome.jsp",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\welcome.jsp",
         lang: "JSP",
         code: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Welcome</title>
@@ -438,10 +513,11 @@ public class LoginServlet extends HttpServlet {
       },
       {
         name: "error.jsp",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\error.jsp",
         lang: "JSP",
         code: `<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login Failed</title>
@@ -455,13 +531,15 @@ public class LoginServlet extends HttpServlet {
       },
       {
         name: "web.xml",
+        path: "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\web.xml",
         lang: "XML",
         code: `<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-  version="3.1">
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+  version="4.0"
+  metadata-complete="true">
 
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -476,40 +554,38 @@ public class LoginServlet extends HttpServlet {
 </web-app>`
       },
       {
-        name: "Setup & Execution Guide (CMD)",
+        name: "2. Compile & Test (CMD)",
+        path: "CMD Terminal (Compile & Test)",
         lang: "TEXT",
         code: `:: ========================================================
-:: EXPERIMENT 5: JSP & MYSQL LOGIN SETUP GUIDE
+:: EXPERIMENT 5: COMPILE, RESTART & VERIFICATION
 :: ========================================================
 
-:: 1. MySQL Installer & Setup:
-:: URL: https://dev.mysql.com/downloads/installer/ (mysql-installer-web-community-8.0.42)
-cd "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin"
-mysql -u root -p
-:: (Enter your root password and execute the SQL script in "Create MySQL Database Table")
+:: 1. Compile LoginServlet using Tomcat's servlet-api.jar:
+javac -encoding UTF-8 -cp "%CATALINA_HOME%\\lib\\servlet-api.jar" -d "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes" "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\LoginServlet.java"
 
-:: 2. MySQL Connector/J Runtime Library:
-:: Place mysql-connector-j-8.0.33.jar into:
-:: %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\lib\\
-
-:: 3. Application File Locations:
-:: - %CATALINA_HOME%\\webapps\\Sample\\Login.jsp
-:: - %CATALINA_HOME%\\webapps\\Sample\\welcome.jsp
-:: - %CATALINA_HOME%\\webapps\\Sample\\error.jsp
-:: - %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\web.xml
-:: - %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\LoginServlet.java
-
-:: 4. Compile LoginServlet:
-javac -cp "%CATALINA_HOME%\\lib\\servlet-api.jar" -d "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\classes" "%CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\servlet\\com\\example\\LoginServlet.java"
-
-:: 5. Restart Tomcat to apply changes:
+:: 2. Restart Tomcat to apply servlet and load Connector/J JAR:
 "%CATALINA_HOME%\\bin\\shutdown.bat"
 "%CATALINA_HOME%\\bin\\startup.bat"
 
-:: 6. Test in Browser:
+:: 3. Test Authentication in Browser:
 :: URL: http://127.0.0.1:8080/Sample/Login.jsp
-:: Valid login: admin / admin123 -> Displays "Welcome, admin!"
-:: Invalid login: admin / wrong -> Dispatches to error.jsp with link to Login.jsp`
+
+:: • Valid Credentials Test:
+::   Username: admin
+::   Password: admin123
+::   Expected: Forwards to /welcome.jsp showing "Welcome, admin!" and "You have successfully logged in."
+
+:: • Invalid Credentials Test:
+::   Username: admin
+::   Password: wrong_password
+::   Expected: Forwards to /error.jsp showing "Invalid username or password. Try again." with link to Login.jsp.
+
+:: ── Troubleshooting ──
+:: • MySQL Not Running: Start service via 'net start MySQL80' or Services app.
+:: • Access Denied: Verify DB_PASSWORD in LoginServlet.java matches your root password.
+:: • ClassNotFoundException: Ensure mysql-connector-j JAR exists in %CATALINA_HOME%\\webapps\\Sample\\WEB-INF\\lib\\
+:: • HTTP 404: Confirm Login.jsp casing matches and web.xml mapping is /LoginServlet.`
       }
     ]
   },
@@ -888,8 +964,8 @@ if (isFirefox) {
   },
   {
     num: "09",
-    title: "Auto Background Color Changer (Frontend + Servlet Backend)",
-    desc: "Experiment No. 09 — Periodic DOM background color changer with optional Maven WAR Java Servlet backend integration",
+    title: "Auto Background Color Changer",
+    desc: "Experiment No. 09 — Periodic DOM color changer with Optional Backend: Java Servlet with Maven and Tomcat 9",
     tags: [
       { label: "HTML", cls: "tag-java" },
       { label: "Java", cls: "tag-oop" },
@@ -897,7 +973,8 @@ if (isFirefox) {
     ],
     files: [
       {
-        name: "index.html",
+        name: "index.html (Frontend)",
+        path: "AutoColorChanger/src/main/webapp/index.html",
         lang: "HTML",
         code: `<!doctype html>
 <html lang="en">
@@ -946,56 +1023,8 @@ if (isFirefox) {
 </html>`
       },
       {
-        name: "ColorServlet.java",
-        lang: "JAVA",
-        code: `package com.example.web;
-
-import java.io.IOException;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-/**
- * Optional servlet backend wrapper specified in Experiment 9.
- * Forwards request cleanly to index.html with UTF-8 encoding.
- */
-public class ColorServlet extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
-        dispatcher.forward(request, response);
-    }
-}`
-      },
-      {
-        name: "web.xml",
-        lang: "XML",
-        code: `<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
-                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-  version="3.1">
-
-  <servlet>
-    <servlet-name>ColorServlet</servlet-name>
-    <servlet-class>com.example.web.ColorServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>ColorServlet</servlet-name>
-    <url-pattern>/color</url-pattern>
-  </servlet-mapping>
-
-</web-app>`
-      },
-      {
         name: "pom.xml",
+        path: "AutoColorChanger/pom.xml",
         lang: "XML",
         code: `<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -1006,6 +1035,8 @@ public class ColorServlet extends HttpServlet {
   <artifactId>AutoColorChanger</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
+  <!-- Pins final output WAR name to AutoColorChanger.war -->
+  <finalName>AutoColorChanger</finalName>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1034,13 +1065,66 @@ public class ColorServlet extends HttpServlet {
 </project>`
       },
       {
-        name: "Maven Project Layout & Build Guide",
+        name: "ColorServlet.java",
+        path: "AutoColorChanger/src/main/java/com/example/web/ColorServlet.java",
+        lang: "JAVA",
+        code: `package com.example.web;
+
+import java.io.IOException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Optional Backend: Java Servlet with Maven and Tomcat 9.
+ * Forwards cleanly to /index.html with UTF-8 character encoding.
+ */
+public class ColorServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html; charset=UTF-8");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/index.html");
+        dispatcher.forward(request, response);
+    }
+}`
+      },
+      {
+        name: "web.xml",
+        path: "AutoColorChanger/src/main/webapp/WEB-INF/web.xml",
+        lang: "XML",
+        code: `<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+  version="4.0"
+  metadata-complete="true">
+
+  <servlet>
+    <servlet-name>ColorServlet</servlet-name>
+    <servlet-class>com.example.web.ColorServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ColorServlet</servlet-name>
+    <url-pattern>/color</url-pattern>
+  </servlet-mapping>
+
+</web-app>`
+      },
+      {
+        name: "Maven Build & Deploy (CMD)",
+        path: "CMD Terminal (Maven Build & Deploy)",
         lang: "TEXT",
         code: `:: ========================================================
-:: EXPERIMENT 9: MAVEN WAR PROJECT & DEPLOYMENT GUIDE
+:: EXPERIMENT 9: MAVEN WAR PROJECT BUILD & DEPLOYMENT
 :: ========================================================
 
-:: 1. Standard Maven Web Application Directory Structure:
+:: 1. Standard Maven Project Layout:
 :: AutoColorChanger/
 :: ├── pom.xml
 :: └── src/
@@ -1051,19 +1135,24 @@ public class ColorServlet extends HttpServlet {
 ::             ├── index.html
 ::             └── WEB-INF/web.xml
 
-:: 2. Build the WAR package using Maven:
+:: 2. Package WAR file from AutoColorChanger root:
 mvn clean package
 
-:: 3. Expected Build Output:
+:: Target Output Produced:
 :: target\\AutoColorChanger.war
 
-:: 4. Deployment to Apache Tomcat 9:
-:: Copy target\\AutoColorChanger.war to:
-:: %CATALINA_HOME%\\webapps\\AutoColorChanger.war
+:: 3. Deploy to Apache Tomcat 9:
+copy "target\\AutoColorChanger.war" "%CATALINA_HOME%\\webapps\\AutoColorChanger.war"
 
-:: 5. Test Deployed Application:
-:: Direct frontend: http://localhost:8080/AutoColorChanger/
-:: Servlet endpoint: http://localhost:8080/AutoColorChanger/color`
+:: 4. Verify in Browser:
+:: Direct Static Page: http://localhost:8080/AutoColorChanger/
+:: Servlet Endpoint:   http://localhost:8080/AutoColorChanger/color
+:: Both display the auto background color changer page.
+
+:: ── Troubleshooting ──
+:: • "mvn" Not Recognized: Install Maven and add its bin folder to PATH.
+:: • WAR Name: <finalName>AutoColorChanger</finalName> guarantees the context path is /AutoColorChanger.
+:: • javax vs jakarta: Tomcat 9 requires javax.servlet:javax.servlet-api:4.0.1.`
       }
     ]
   },

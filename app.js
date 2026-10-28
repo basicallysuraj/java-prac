@@ -200,6 +200,7 @@ function buildCards() {
               <div class="file-info">
                 <span class="lang-badge ${langClass(f.lang)}">${esc(f.lang)}</span>
                 <span class="file-label">${esc(f.name)}</span>
+                ${f.path ? `<span class="file-dest-path" title="Destination path: ${esc(f.path)}">📍 ${esc(f.path)}</span>` : ''}
                 <span class="line-count">(${lineCount} lines)</span>
               </div>
               <button class="btn-copy"
