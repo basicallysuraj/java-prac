@@ -383,17 +383,22 @@ function fallbackCopy(text, callback) {
 
 /* ── Toast Notification ── */
 let toastTimer = null;
-function showToast(msg) {
+function showToast(msg, icon) {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toastMsg');
+  const toastIcon = toast ? toast.querySelector('.toast-icon') : null;
   if (!toast || !toastMsg) return;
 
   toastMsg.textContent = msg;
+  if (toastIcon && icon) toastIcon.textContent = icon;
+  else if (toastIcon) toastIcon.textContent = '✅';
+
   toast.classList.add('show');
 
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toast.classList.remove('show');
+    if (toastIcon) toastIcon.textContent = '✅';
   }, 2600);
 }
 
